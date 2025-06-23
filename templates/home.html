@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <div class="bg-gradient">
+        <div class="justify-center items-center max-w-4xl mx-auto py-20">
+            <h2 class="text-4xl font-bold text-center">Depressive Disorder Prediction</h2>
+            <p class="mt-6 text-center">
+                Depression is a complex and often invisible condition that affects how a person thinks, feels, and
+                functions in daily life. Early understanding and awareness can make a crucial difference. This dashboard
+                offers an anonymous and secure way to explore and predict the risk of depressive disorder using a
+                HistGradientBoosting machine learning model. It highlights key contributing factors from real-world data
+                and presents clear, explainable results to support mental health reflection and action. </p>
+            <div class="mt-10 flex justify-center">
+                <a href="{{ url_for('discovery') }}"
+                    class="font-bold text-navy py-3 px-6 bg-light-blue rounded-full hover:bg-[#C7E0FF] transition duration-300 mr-4">
+                    Start Discovery</a>
+                <a href="{{ url_for('prediction') }}"
+                    class="font-bold text-navy py-3 px-6 rounded-full bg-light-blue hover:bg-[#C7E0FF] transition duration-300">
+                    Start Prediction</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="justify-center items-center max-w-4xl mx-auto">
+        <h4 class="flex justify-center text-2xl font-bold text-center">Why It's Okay Not to Be Okay</h4>
+        <p class="mt-8 text-center">
+            Everyone experiences low points — it's a natural part of being human. Feeling down, anxious, or overwhelmed
+            doesn't make someone weak or broken. These emotions are valid and often signal that we need rest, support,
+            or a change in our environment.
+
+            Acknowledging that you're not okay is not a failure, but a form of strength. It's the first step toward
+            healing, reflection, and growth. Whether you're navigating a tough period or supporting someone who is,
+            remember: you don't have to go through it alone.
+        </p>
+
+
+        <h4 class="mt-20 flex justify-center text-2xl font-bold text-center">Facts About Depression</h4>
+        <div class="mt-10 flex justify-center">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex flex-col items-center w-56">
+                    <img src="https://images.pexels.com/photos/17960354/pexels-photo-17960354.jpeg"
+                        alt="Demographic and Socioeconomic Factors" class="w-56 h-56 object-cover rounded-lg shadow-lg">
+                    <p class="mt-4 text-center font-medium">Depression is Closely Linked to Various Demographic and
+                        Socioeconomic Factors</p>
+                </div>
+                <div class="flex flex-col items-center w-56">
+                    <img src="https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg"
+                        alt="Medical Conditions and Lifestyle" class="w-56 h-56 object-cover rounded-lg shadow-lg">
+                    <p class="mt-4 text-center font-medium"> Depression Often Co-occurs with Other Medical
+                        Conditions and is Influenced by Lifestyle</p>
+                </div>
+                <div class="flex flex-col items-center w-56">
+                    <img src="https://images.pexels.com/photos/3184396/pexels-photo-3184396.jpeg" alt="Fact 3"
+                        class="w-56 h-56 object-cover rounded-lg shadow-lg">
+                    <p class="mt-4 text-center font-medium"> Mental Well-being and Social Support are Strong
+                        Predictors of Depression</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

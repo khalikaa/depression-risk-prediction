@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Depressive Disorder Prediction Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="pop bg-navy text-white min-h-screen">
+  <nav class="shadow p-6 flex justify-between items-center bg-navy-dark sticky top-0 z-50 custom-shadow">
+    <h2 class="text-xl font-bold">Depressive Disorder Prediction</h2>
+    <div class="space-x-1">
+      <a href="{{ url_for('home') }}" class="py-2 px-5 transition duration-300 ease-in-out rounded-full
+         {% if request.endpoint == 'home' %}bg-navy-2{% else %}text-white hover:bg-[#38476a]{% endif %}">
+        Home</a>
+      <a href="{{ url_for('discovery') }}" class="py-2 px-5 transition duration-300 ease-in-out rounded-full
+         {% if request.endpoint == 'discovery' %}bg-navy-2{% else %}text-white hover:bg-[#38476a]{% endif %}">
+        Discovery</a>
+      <a href="{{ url_for('prediction') }}" class="py-2 px-5 transition duration-300 ease-in-out rounded-full
+         {% if request.endpoint == 'prediction' %}bg-navy-2{% else %}text-white hover:bg-[#38476a]{% endif %}">
+        Prediction</a>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="shadow p-6 flex justify-between items-center bg-navy-dark bottom-0 mt-20 custom-shadow"
+  >
+    <div>
+      <p class="text-white text-sm">
+        &copy; 2025 All Rights Reserved
+      </p>
+      <p class="text-white text-sm mt-1">
+        Depressive Disorder Prediction
+      </p>
+    </div>
+    <div>
+      <p class="text-white text-right text-sm">
+        Project Contributors
+      </p>
+      <p class="text-white text-right text-sm mt-1">
+        Alifsa Rezky, Khalika Tsabitah, Nancy Jiwono, Yusra Erlangga, Zainab Muchsinin</p>
+    </div>
+  </footer>
+</body>
+
+</html>

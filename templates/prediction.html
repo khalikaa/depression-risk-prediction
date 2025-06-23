@@ -1,0 +1,703 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <div class="bg-gradient">
+        <div class="flex flex-col items-center max-w-4xl mx-auto py-12">
+            <h2 class="text-4xl font-bold text-center">Depression Risk Prediction</h2>
+            <p class="mt-6 text-center">
+                This page provides a personalized prediction of depression risk based on key health, behavioral, and
+                social factors. After answering a short set of questions, a prediction is generated using a model that
+                has learned from thousands of real-life survey responses collected in the BRFSS dataset. The result is
+                shown along with the main factors that influence the prediction. No one else will see or access your
+                prediction—it's entirely for your own reflection and awareness.
+            </p>
+            <a href="{{ url_for('home') }}"
+                class="mt-6 text-navy py-3 px-6 bg-light-blue rounded-full hover:bg-[#C7E0FF] transition duration-300 font-bold">
+                Back to Home</a>
+        </div>
+
+
+    </div>
+
+    <div class="justify-center items-center max-w-5xl mx-auto px-4">
+        <form id="predictionForm" method="POST" action="{{ url_for('prediction') }}" class="space-y-12">
+            <div class="p-6 rounded-lg shadow"> {# Added for contrast in dark theme #}
+                <h2 class="text-2xl font-bold mb-6 border-b pb-2">Demographic Information</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block mb-2 font-medium" for="_AGE_G">How old are you?</label>
+                        <select name="_AGE_G" id="_AGE_G"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._AGE_G=='1' %}selected{% endif %}>18-24</option>
+                            <option value="2" {% if form_data._AGE_G=='2' %}selected{% endif %}>25-34</option>
+                            <option value="3" {% if form_data._AGE_G=='3' %}selected{% endif %}>35-44</option>
+                            <option value="4" {% if form_data._AGE_G=='4' %}selected{% endif %}>45-54</option>
+                            <option value="5" {% if form_data._AGE_G=='5' %}selected{% endif %}>55-64</option>
+                            <option value="6" {% if form_data._AGE_G=='6' %}selected{% endif %}>65+</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_SEX">What is your gender?</label>
+                        <select name="_SEX" id="_SEX"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._SEX=='1' %}selected{% endif %}>Male</option>
+                            <option value="2" {% if form_data._SEX=='2' %}selected{% endif %}>Female</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_RACEPRV">What is your race?</label>
+                        <select name="_RACEPRV" id="_RACEPRV"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._RACEPRV=='1' %}selected{% endif %}>White only,
+                                non-Hispanic</option>
+                            <option value="2" {% if form_data._RACEPRV=='2' %}selected{% endif %}>Black only,
+                                non-Hispanic</option>
+                            <option value="3" {% if form_data._RACEPRV=='3' %}selected{% endif %}>American Indian or
+                                Alaskan Native only, non-Hispanic</option>
+                            <option value="4" {% if form_data._RACEPRV=='4' %}selected{% endif %}>Asian only,
+                                non-Hispanic</option>
+                            <option value="5" {% if form_data._RACEPRV=='5' %}selected{% endif %}>Native Hawaiian or
+                                other Pacific Islander only, non-Hispanic</option>
+                            <option value="6" {% if form_data._RACEPRV=='6' %}selected{% endif %}>Other race only,
+                                non-Hispanic</option>
+                            <option value="7" {% if form_data._RACEPRV=='7' %}selected{% endif %}>Multiracial,
+                                non-Hispanic</option>
+                            <option value="8" {% if form_data._RACEPRV=='8' %}selected{% endif %}>Hispanic</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_EDUCAG">What is the highest education level you've
+                            completed?</label>
+                        <select name="_EDUCAG" id="_EDUCAG"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._EDUCAG=='1' %}selected{% endif %}>Did not graduate High
+                                School</option>
+                            <option value="2" {% if form_data._EDUCAG=='2' %}selected{% endif %}>Graduated High School
+                            </option>
+                            <option value="3" {% if form_data._EDUCAG=='3' %}selected{% endif %}>Attended College or
+                                Technical School</option>
+                            <option value="4" {% if form_data._EDUCAG=='4' %}selected{% endif %}>Graduated from College
+                                or Technical School</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="MARITAL">What is your marital status?</label>
+                        <select name="MARITAL" id="MARITAL"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.MARITAL=='1' %}selected{% endif %}>Married</option>
+                            <option value="2" {% if form_data.MARITAL=='2' %}selected{% endif %}>Divorced</option>
+                            <option value="3" {% if form_data.MARITAL=='3' %}selected{% endif %}>Widowed</option>
+                            <option value="4" {% if form_data.MARITAL=='4' %}selected{% endif %}>Separated</option>
+                            <option value="5" {% if form_data.MARITAL=='5' %}selected{% endif %}>Never married</option>
+                            <option value="6" {% if form_data.MARITAL=='6' %}selected{% endif %}>A member of an
+                                unmarried couple</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="EMPLOY1">Are you currently employed?</label>
+                        <select name="EMPLOY1" id="EMPLOY1"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.EMPLOY1=='1' %}selected{% endif %}>I'm employed for wages
+                            </option>
+                            <option value="2" {% if form_data.EMPLOY1=='2' %}selected{% endif %}>I'm self-employed
+                            </option>
+                            <option value="3" {% if form_data.EMPLOY1=='3' %}selected{% endif %}>I'm out of work for 1
+                                year or more</option>
+                            <option value="4" {% if form_data.EMPLOY1=='4' %}selected{% endif %}>I'm out of work for
+                                less than 1 year</option>
+                            <option value="5" {% if form_data.EMPLOY1=='5' %}selected{% endif %}>I'm a homemaker
+                            </option>
+                            <option value="6" {% if form_data.EMPLOY1=='6' %}selected{% endif %}>I'm a student</option>
+                            <option value="7" {% if form_data.EMPLOY1=='7' %}selected{% endif %}>I'm retired</option>
+                            <option value="8" {% if form_data.EMPLOY1=='8' %}selected{% endif %}>I'm unable to work
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_INCOMG1">What is your annual household
+                            income?</label>
+                        <select name="_INCOMG1" id="_INCOMG1"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._INCOMG1=='1' %}selected{% endif %}>&lt; $15,000</option>
+                            <option value="2" {% if form_data._INCOMG1=='2' %}selected{% endif %}>$15,000-$25,000
+                            </option>
+                            <option value="3" {% if form_data._INCOMG1=='3' %}selected{% endif %}>$25,000-$35,000
+                            </option>
+                            <option value="4" {% if form_data._INCOMG1=='4' %}selected{% endif %}>$35,000-$50,000
+                            </option>
+                            <option value="5" {% if form_data._INCOMG1=='5' %}selected{% endif %}>$50,000-$100,000
+                            </option>
+                            <option value="6" {% if form_data._INCOMG1=='6' %}selected{% endif %}>$100,000-$200,000
+                            </option>
+                            <option value="7" {% if form_data._INCOMG1=='7' %}selected{% endif %}>&gt; $200,000</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_CHLDCNT">How many children under 18 live in your
+                            household?</label>
+                        <select name="_CHLDCNT" id="_CHLDCNT"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._CHLDCNT=='1' %}selected{% endif %}>None</option>
+                            <option value="2" {% if form_data._CHLDCNT=='2' %}selected{% endif %}>1 child</option>
+                            <option value="3" {% if form_data._CHLDCNT=='3' %}selected{% endif %}>2 children</option>
+                            <option value="4" {% if form_data._CHLDCNT=='4' %}selected{% endif %}>3 children</option>
+                            <option value="5" {% if form_data._CHLDCNT=='5' %}selected{% endif %}>4 Children</option>
+                            <option value="6" {% if form_data._CHLDCNT=='6' %}selected{% endif %}>5+ Children</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="RENTHOM1">Do you own or rent your home?</label>
+                        <select name="RENTHOM1" id="RENTHOM1"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.RENTHOM1=='1' %}selected{% endif %}>Own</option>
+                            <option value="2" {% if form_data.RENTHOM1=='2' %}selected{% endif %}>Rent</option>
+                            <option value="3" {% if form_data.RENTHOM1=='3' %}selected{% endif %}>Other arrangement
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_METSTAT">What is your metropolitan status?</label>
+                        <select name="_METSTAT" id="_METSTAT"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._METSTAT=='1' %}selected{% endif %}>Metropolitan</option>
+                            <option value="2" {% if form_data._METSTAT=='2' %}selected{% endif %}>Non-metropolitan
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold mb-6 border-b pb-2">Health Conditions</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="md:col-span-2">
+                        <div class="grid grid-cols-2 gap-8 mb-2">
+                            <div>
+                                <label class="block mb-1" for="height">What is your height (cm)?</label>
+                                <input type="number" id="height" name="height"
+                                    value="{{ form_data.height if form_data else '175' }}" min="100" max="250"
+                                    class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                                    required>
+                            </div>
+                            <div>
+                                <label class="block mb-1" for="weight">What is your weight (kg)</label>
+                                <input type="number" id="weight" name="weight"
+                                    value="{{ form_data.weight if form_data else '70' }}" min="30" max="250"
+                                    class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_CASTHM1">Do you currently have asthma?</label>
+                        <select name="_CASTHM1" id="_CASTHM1"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._CASTHM1=='1' %}selected{% endif %}>No</option>
+                            <option value="2" {% if form_data._CASTHM1=='2' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="DIABETE4">Have you ever been told you have
+                            diabetes?</label>
+                        <select name="DIABETE4" id="DIABETE4"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.DIABETE4=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data.DIABETE4=='2' %}selected{% endif %}>Yes, but only during
+                                pregnancy</option>
+                            <option value="3" {% if form_data.DIABETE4=='3' %}selected{% endif %}>No</option>
+                            <option value="4" {% if form_data.DIABETE4=='4' %}selected{% endif %}>Pre-diabetes or
+                                borderline diabetes</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_DRDXAR2">Have you ever been told you have
+                            arthritis?</label>
+                        <select name="_DRDXAR2" id="_DRDXAR2"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._DRDXAR2=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data._DRDXAR2=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="CHCKDNY2">Have you ever been told you have kidney
+                            disease?</label>
+                        <select name="CHCKDNY2" id="CHCKDNY2"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.CHCKDNY2=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data.CHCKDNY2=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="CHCCOPD3">Have you ever been told you have COPD
+                            (Chronic Obstructive
+                            Pulmonary Disease), Emphysema or Chronic Bronchitis?</label>
+                        <select name="CHCCOPD3" id="CHCCOPD3"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.CHCCOPD3=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data.CHCCOPD3=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold mb-6 border-b pb-2">Social Determinants</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block mb-2 font-medium" for="SDHFOOD1">During the past 12 months, how often did
+                            the food you bought not last and you didn't have money to buy more?</label>
+                        <select name="SDHFOOD1" id="SDHFOOD1"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.SDHFOOD1=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data.SDHFOOD1=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="SDHBILLS">During the last 12 months, was there a time
+                            when you were not able to pay your mortgage, rent or utility bills?</label>
+                        <select name="SDHBILLS" id="SDHBILLS"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.SDHBILLS=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data.SDHBILLS=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="SDHEMPLY"> During the past 12 months,have you lost
+                            employment or had hours reduced?</label>
+                        <select name="SDHEMPLY" id="SDHEMPLY"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.SDHEMPLY=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data.SDHEMPLY=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="EMTSUPRT">How often do you get the social and
+                            emotional support you need?</label>
+                        <select name="EMTSUPRT" id="EMTSUPRT"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.EMTSUPRT=='1' %}selected{% endif %}>Always</option>
+                            <option value="2" {% if form_data.EMTSUPRT=='2' %}selected{% endif %}>Usually</option>
+                            <option value="3" {% if form_data.EMTSUPRT=='3' %}selected{% endif %}>Sometimes</option>
+                            <option value="4" {% if form_data.EMTSUPRT=='4' %}selected{% endif %}>Rarely</option>
+                            <option value="5" {% if form_data.EMTSUPRT=='5' %}selected{% endif %}>Never</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="SDLONELY">How often do you feel lonely?</label>
+                        <select name="SDLONELY" id="SDLONELY"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.SDLONELY=='1' %}selected{% endif %}>Always</option>
+                            <option value="2" {% if form_data.SDLONELY=='2' %}selected{% endif %}>Usually</option>
+                            <option value="3" {% if form_data.SDLONELY=='3' %}selected{% endif %}>Sometimes</option>
+                            <option value="4" {% if form_data.SDLONELY=='4' %}selected{% endif %}>Rarely</option>
+                            <option value="5" {% if form_data.SDLONELY=='5' %}selected{% endif %}>Never</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="LSATISFY">In general, how satisfied are you with your
+                            life?</label>
+                        <select name="LSATISFY" id="LSATISFY"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.LSATISFY=='1' %}selected{% endif %}>Very satisfied
+                            </option>
+                            <option value="2" {% if form_data.LSATISFY=='2' %}selected{% endif %}>Satisfied</option>
+                            <option value="3" {% if form_data.LSATISFY=='3' %}selected{% endif %}>Dissatisfied</option>
+                            <option value="4" {% if form_data.LSATISFY=='4' %}selected{% endif %}>Very dissatisfied
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="SDHSTRE1">Within the last 30 days, how often do you
+                            feel high stress?</label>
+                        <p class="text-sm text-gray-400 mb-2">Stress means a situation in which a person feels tense,
+                            restless, nervous, or anxious, or is unable to sleep at night because their mind is troubled
+                            all the time</p>
+                        <select name="SDHSTRE1" id="SDHSTRE1"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data.SDHSTRE1=='1' %}selected{% endif %}>Always</option>
+                            <option value="2" {% if form_data.SDHSTRE1=='2' %}selected{% endif %}>Usually</option>
+                            <option value="3" {% if form_data.SDHSTRE1=='3' %}selected{% endif %}>Sometimes</option>
+                            <option value="4" {% if form_data.SDHSTRE1=='4' %}selected{% endif %}>Rarely</option>
+                            <option value="5" {% if form_data.SDHSTRE1=='5' %}selected{% endif %}>Never</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold mb-6 border-b pb-2">Lifestyle Factors</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block mb-2 font-medium" for="_SMOKER3">Which of the following best describes your
+                            smoking status?</label>
+                        <select name="_SMOKER3" id="_SMOKER3"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._SMOKER3=='1' %}selected{% endif %}>Everyday smoker
+                            </option>
+                            <option value="2" {% if form_data._SMOKER3=='2' %}selected{% endif %}>Someday smoker
+                            </option>
+                            <option value="3" {% if form_data._SMOKER3=='3' %}selected{% endif %}>Former smoker</option>
+                            <option value="4" {% if form_data._SMOKER3=='4' %}selected{% endif %}>Non-smoker</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_TOTINDA">During the past 30 days, did you do any
+                            physical activity or exercise other than your regular job?</label>
+                        <select name="_TOTINDA" id="_TOTINDA"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._TOTINDA=='1' %}selected{% endif %}>Yes</option>
+                            <option value="2" {% if form_data._TOTINDA=='2' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 font-medium" for="_RFBING6">In the past 30 days, did you engage in
+                            binge drinking?</label>
+                        <p class="text-sm text-gray-400 mb-2">Binge drinking is defined as having 5 or more drinks on
+                            one occasion for males, or 4 or more for females.</p>
+                        <select name="_RFBING6" id="_RFBING6"
+                            class="w-full border rounded p-2 text-gray-800 focus:outline-none focus:ring-0 focus:border-transparent"
+                            required>
+                            <option value="1" {% if form_data._RFBING6=='1' %}selected{% endif %}>No</option>
+                            <option value="2" {% if form_data._RFBING6=='2' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" id="submitButton"
+                    class="bg-light-blue px-8 py-3 rounded-full text-lg text-navy font-bold hover:bg-[#C7E0FF]">
+                    Predict Depression Risk
+                </button>
+            </div>
+        </form>
+
+        <div id="resultContainer" class="hidden max-w-6xl mx-auto mt-8 p-6 rounded-lg shadow">
+            <h2 class="text-3xl font-bold mb-4">Your Prediction Result</h2>
+            <h2 id="textResult" class="text-2xl font-bold mb-4">Positive/Negative</h2>
+            <p id="expResult" class="italic"></p>
+            <div id="submissionInfo" class="mt-4 text-gray-400"></div>
+            <div id="plotContainer" class="hidden mt-10 p-6 bg-white/5 rounded-lg shadow-lg border border-gray-700">
+                <h3 class="text-2xl font-bold mb-6 text-center">Your Depression Risk Factors Analysis</h3>
+                <div class="lg:flex-row">
+                    <div class="mb-6 lg:mb-0 lg:pr-8" style="height: 300px;">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                    <div class="justify-center">
+                        <div class="p-5 rounded-lg">
+                            <h4 class="text-xl font-semibold mb-3">Understanding Your Results</h4>
+                            <p class="mb-4 text-gray-300">
+                                Based on your responses, this graph shows the top 5 most influential factors affecting
+                                your
+                                depression risk prediction. Each bar represents a specific factor with its impact level.
+                            </p>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-start mt-2">
+                                    <span class="inline-block w-3 h-3 bg-white mt-1.5 mr-2 rounded-full"></span>
+                                    <span>Longer bars represent stronger influences on the prediction.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="inline-block w-3 h-3 bg-[#f72585] mt-1.5 mr-2 rounded-full"></span>
+                                    <span><strong>Red bars</strong> indicate factors that <strong>increase</strong> your
+                                        depression risk.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="inline-block w-3 h-3 bg-[#4361ee] mt-1.5 mr-2 rounded-full"></span>
+                                    <span><strong>Blue bars</strong> indicate factors that <strong>decrease</strong>
+                                        your depression risk.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorContainer"
+        class="hidden max-w-6xl mx-auto mt-6 p-4 bg-red-800 border border-red-700 text-red-200 rounded">
+        <p class="font-bold">Error:</p>
+        <p id="errorMessage"></p>
+    </div>
+</div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('predictionForm');
+        const submitButton = document.getElementById('submitButton');
+        const resultContainer = document.getElementById('resultContainer');
+        const submissionInfoDiv = document.getElementById('submissionInfo');
+        const plotContainer = document.getElementById('plotContainer');
+        // const shapPlotImg = document.getElementById('shapPlot');
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMessageP = document.getElementById('errorMessage');
+        const textResult = document.getElementById('textResult');
+        const expResult = document.getElementById('expResult');
+        const shapChartCanvas = document.getElementById('shapChart');
+        let shapChart = null; // Untuk menyimpan instance Chart.js
+
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission (page reload)
+
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'Predicting...';
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Hide previous results/errors
+            resultContainer.classList.add('hidden');
+            errorContainer.classList.add('hidden');
+            errorMessageP.textContent = '';
+            plotContainer.classList.add('hidden');
+            // shapPlotImg.src = ''; // Clear previous image
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData // FormData object automatically sets Content-Type to multipart/form-data
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                textResult.classList.remove('text-positive', 'text-negative');
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.shap_chart_data) {
+                        plotContainer.classList.remove('hidden');
+                        // Destroy previous chart if it exists
+                        if (shapChart) {
+                            shapChart.destroy();
+                        }
+
+                        const features = data.shap_chart_data.features;
+                        const values = data.shap_chart_data.shap_values;
+
+                        const featureData = features.map((feature, index) => ({
+                            feature: feature,
+                            value: values[index],
+                            absValue: Math.abs(values[index])
+                        }));
+
+                        featureData.sort((a, b) => b.absValue - a.absValue);
+
+                        const top5 = featureData.slice(0, 5);
+
+                        const chartLabels = top5.map(item => item.feature);
+                        const chartValues = top5.map(item => item.value);
+
+                        const ctx = shapChartCanvas.getContext('2d');
+                        const positiveGradient = ctx.createLinearGradient(0, 0, 400, 0);
+                        positiveGradient.addColorStop(0, 'rgba(247, 37, 133, 0.7)');
+                        positiveGradient.addColorStop(1, 'rgba(247, 37, 133, 1)');
+
+                        const negativeGradient = ctx.createLinearGradient(0, 0, 400, 0);
+                        negativeGradient.addColorStop(0, 'rgba(67, 97, 238, 0.7)');
+                        negativeGradient.addColorStop(1, 'rgba(67, 97, 238, 1)');
+
+                        shapChart = new Chart(shapChartCanvas, {
+                            type: 'bar',
+                            data: {
+                                labels: chartLabels,
+                                datasets: [{
+                                    label: 'Impact on Prediction',
+                                    data: chartValues,
+                                    backgroundColor: chartValues.map(v => v > 0 ? positiveGradient : negativeGradient),
+                                    borderColor: chartValues.map(v => v > 0 ? 'rgba(247, 37, 133, 1)' : 'rgba(67, 97, 238, 1)'),
+                                    borderWidth: 1,
+                                    borderRadius: 4,
+                                    barThickness: 20
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    title: {
+                                        color: '#FFFFFF',
+                                        display: true,
+                                        text: 'Top 5 Factors Affecting Your Depression Risk',
+                                        font: {
+                                            family: 'Poppins, sans-serif',
+                                            size: 16,
+                                            weight: 'bold'
+                                        },
+                                        padding: {
+                                            bottom: 5
+                                        }
+                                    },
+                                    legend: {
+                                        display: false
+                                    },
+                                    tooltip: {
+                                        color: '#FFFFFF',
+                                        callbacks: {
+                                            label: function (context) {
+                                                const value = context.raw;
+                                                const direction = value > 0 ? 'increases' : 'decreases';
+                                                return `Impact: ${value.toFixed(3)} (${direction} risk)`;
+                                            }
+                                        },
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        padding: 10,
+                                        cornerRadius: 6,
+                                        titleFont: {
+                                            size: 14,
+                                            family: 'Poppins, sans-serif',
+                                        },
+                                        bodyFont: {
+                                            size: 13,
+                                            family: 'Poppins, sans-serif',
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        beginAtZero: true,
+                                        grid: {
+                                            color: 'rgba(200, 200, 200, 0.2)',
+                                            lineWidth: 0.5
+                                        },
+                                        ticks: {
+                                            font: {
+                                                size: 12,
+                                                family: 'Poppins, sans-serif',
+                                            },
+                                            callback: function (value) {
+                                                return value.toFixed(2);
+                                            }
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Impact on Depression Risk',
+                                            font: {
+                                                size: 14,
+                                                weight: 'bold',
+                                                family: 'Poppins, sans-serif'
+                                            },
+                                            padding: {
+                                                top: 10
+                                            },
+                                            color: '#FFFFFF'
+                                        }
+                                    },
+                                    y: {
+                                        grid: {
+                                            display: false
+                                        },
+                                        ticks: {
+                                            font: {
+                                                size: 12,
+                                                weight: 'bold',
+                                                family: 'Poppins, sans-serif'
+                                            },
+                                            color: '#FFFFFF'
+                                        },
+                                    }
+                                },
+                                animation: {
+                                    duration: 1000,
+                                    easing: 'easeOutQuart'
+                                }
+                            }
+                        });
+                    }
+                    submissionInfoDiv.innerHTML = `Assessment completed on: ${data.submission_time}`;
+                    resultContainer.classList.remove('hidden');
+
+                    const predictionValue = data.raw_prediction_value; // Jika Anda mengirim nilai mentah
+                    // Atau const resultMessage = data.result_message; // Jika Anda hanya ingin bekerja dengan pesan
+
+                    if (predictionValue === 1) { // Jika model Anda mengembalikan 1 untuk Risiko Tinggi
+                        textResult.textContent = "Possible signs of depression detected based on your risk factors";
+                        expResult.textContent = "Note: This result is generated using a machine learning model. So, it's NOT a subtitute for professional advice. Please consider speaking to a mental health professional";
+                        textResult.classList.add('text-positive'); // Merah
+                    } else if (predictionValue === 0) {
+                        textResult.textContent = "No significant signs of depression detected based on your risk factors";
+                        expResult.textContent = "Note: This result is generated using a machine learning model. So, it's NOT a subtitute for professional advice. Please stay mindful of your mental well-being.";
+                        textResult.classList.add('text-negative');
+                    } else {
+                        // Kasus untuk prediksi mentah lainnya atau error interpretasi
+                        textResult.textContent = data.result_message || "Hasil tidak dapat diinterpretasi.";
+                    }
+
+                    if (data.show_plot) {
+                        // Force browser to reload image from server, not cache
+                        const timestamp = new Date().getTime();
+                        // shapPlotImg.src = "{{ url_for('static', filename='img/shap_plot.png') }}?t=" + timestamp;
+                        plotContainer.classList.remove('hidden');
+                    }
+                } else {
+                    errorMessageP.textContent = data.error || 'An unknown error occurred.';
+                    errorContainer.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                errorMessageP.textContent = 'Failed to connect to the server or process the request. Please try again.';
+                errorContainer.classList.remove('hidden');
+            } finally {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Predict Depression Risk';
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+    });
+</script>
+{% endblock %}
