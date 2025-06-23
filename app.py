@@ -48,17 +48,6 @@ def get_shap_data(model, input_array, short_feature_names):
         "shap_values": [x[1] for x in paired]
     }
 
-# def get_shap_data(model, input_array, feature_names, short_feature_names):
-#     explainer = shap.Explainer(model, feature_names=short_feature_names)
-#     shap_values = explainer(input_array)
-#     values = shap_values.values[0]
-#     features = shap_values.feature_names
-#     paired = sorted(zip(features, values), key=lambda x: abs(x[1]), reverse=True)
-#     return {
-#         "features": [x[0] for x in paired],
-#         "shap_values": [x[1] for x in paired]
-#     }
-
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -126,12 +115,6 @@ def prediction():
                 _TOTINDA, _SMOKER3
             ]
 
-            feature_names = ['_RFBING6', 'SDHFOOD1', '_BMI5CAT', 'RENTHOM1', '_AGE_G', '_CHLDCNT',
-                             'SDHBILLS', '_EDUCAG', 'EMTSUPRT', 'SDHSTRE1', 'CHCCOPD3', 'EMPLOY1',
-                             '_SEX', 'DIABETE4', '_DRDXAR2', 'CHCKDNY2', '_RACEPRV', 'SDHEMPLY',
-                             '_CASTHM1', 'SDLONELY', 'LSATISFY', '_METSTAT', 'MARITAL', '_INCOMG1',
-                             '_TOTINDA', '_SMOKER3']
-
             input_array = np.array([input_features])
 
             # JSON default
@@ -149,7 +132,6 @@ def prediction():
             if model:
                 raw_prediction = model.predict(input_array)[0]
                 show_plot = True
-                # shap_chart_data = get_shap_data(model, input_array, feature_names, short_feature_names)
                 shap_chart_data = get_shap_data(model, input_array, short_feature_names)
                 response_data["shap_chart_data"] = shap_chart_data
 
